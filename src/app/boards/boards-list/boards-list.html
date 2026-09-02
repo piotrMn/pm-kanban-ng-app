@@ -1,0 +1,22 @@
+<div class="container mt-2">
+    <div class="row">
+        <div class="col">
+        @if (userBoards; as userBoards) {
+            @if (userBoards.length > 0) {
+            <div class="row">
+                <div class="col text-center"><h5>Your Boards</h5></div>
+            </div>
+            <ul class="list-group">
+                @for (userBoard of userBoards; track userBoard.id) {
+                <li class="list-group-item list-group-item-action font-weight-bold m-1 rounded text-center" [routerLink]="[userBoard.id]">{{ userBoard.name }}</li>
+                }
+            </ul>
+            } @else {
+                <p>No boards found.</p>
+            }
+        } @else {
+            <p>Loading boards...</p>
+        }
+        </div>
+    </div>
+</div>

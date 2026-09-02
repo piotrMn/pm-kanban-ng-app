@@ -1,0 +1,46 @@
+<div class="container">
+    @if(item) {
+    <div class="row">
+        <div class="col col-10">
+            <div class="row m-2">
+                <div class="card w-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.title }} 
+                            <span class="badge bg-info m-2">{{ item.type }}</span>
+                            <span class="badge bg-info m-2">{{ item.state }}</span>
+                            <span class="badge bg-info m-2">{{ item.estimation }} pts.</span>
+                        </h5>
+                        <p class="card-text">{{ item.description }}</p>
+                        <h6>Assigned to: {{ item.assignedTo.name }}</h6>
+                        <h6>Created by: {{ item.createdBy.name }}</h6>
+                        <h6>Created at: {{ item.createdAt | date:'medium' }}</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="row m-2">
+                <button class="btn btn-secondary" (click)="closeItemDetail()">Close</button>
+            </div>
+        </div>
+        <div class="col col-2">
+            <div>
+                <h6>Change state</h6>
+                <mat-form-field>
+                    <mat-label>States</mat-label>
+                    <mat-select name="newState" [(value)]="newState">
+                        <mat-option value="TO_DO">TO_DO</mat-option>
+                        <mat-option value="IN_PROGRESS">IN_PROGRESS</mat-option>
+                        <mat-option value="IN_TEST">IN_TEST</mat-option>
+                        <mat-option value="DONE">DONE</mat-option>
+                        <mat-option value="READY_FOR_PROD">READY_FOR_PROD</mat-option>
+                        <mat-option value="READY">READY</mat-option>
+                    </mat-select>
+                </mat-form-field> 
+            </div>
+            <div>
+                <button class="btn btn-secondary" (click)="updateItemState(item.id)">Save</button>
+            </div>
+        </div>
+    </div>
+
+    }
+</div>

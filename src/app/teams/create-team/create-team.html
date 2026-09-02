@@ -1,0 +1,22 @@
+<div class="m-5">
+    <form [formGroup]="createTeamForm" (ngSubmit)="onSubmit()">
+        <h2>Create Team</h2>
+        <div class="form-group">
+            <label for="teamName">Team name:</label>
+            <input id="teamName" formControlName="teamName" class="form-control" />
+        </div>
+<!--         <div class="form-group">
+            <label for="password">Password:</label>
+            <input id="password" type="password" formControlName="password" class="form-control" />
+            @if(createTeamForm.get('password')?.invalid && createTeamForm.get('password')?.touched) {
+                <small class="form-text text-muted">Password must be at least 8 characters long.</small> 
+            }
+        </div> -->
+        <div>
+        @if(createTeamForm.get('teamName')?.errors?.['teamAlreadyExists']) {
+            <p class="form-text  p-2">Team already exists.</p>
+        }
+        </div>
+        <button type="submit" [disabled]="!createTeamForm.valid" class="btn btn-primary">Create</button>
+    </form>
+</div>

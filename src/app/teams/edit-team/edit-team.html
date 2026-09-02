@@ -1,0 +1,40 @@
+<div class="container mt-5">
+    @if(team != null) {
+    <div class="row">
+        <div class="col">
+            @for(teamMember of team.teamMembers; track teamMember.id) {
+            <div class="row">
+                <div class="col-8">
+                    <p>{{ teamMember.name }}</p>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-sm btn-info" (click)="removeUserFromTeam(team.id, teamMember.id)">Remove</button>
+                </div>  
+            </div>
+            }
+        </div>
+        @if(users; as users) {
+            @if(users.length > 0) {
+            <div class="col">
+                @for(user of users; track user.id) {
+                    @if(!this.isUserInTeam(user.id)) {
+                    <div class="row">
+                        <div class="col-8">
+                            <p>{{ user.name }}</p>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-sm btn-info" (click)="addUserToTeam(team.id, user.id)">Add</button>
+                        </div>
+                    </div>
+                    }
+                }
+            </div>
+            } @else {
+                <div>No users</div>
+            }
+        }
+    </div> 
+    } @else {
+        <h5>No team</h5>
+    }
+</div>

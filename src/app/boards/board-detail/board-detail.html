@@ -1,0 +1,109 @@
+<div class="container">
+    @if(boardItems | async; as boardItems) {
+        @if(boardItems.length > 0) {
+            <div class="row">
+                <div class="col col-2">
+                    <h6>READY</h6>
+                    @for(item of boardItems; track item.id) {
+                        @if(item.state === 'READY') {
+                            <div class="card m-2 bg-light" (click)="showItemDetail(item)">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ item.title }} 
+                                        <span class="badge bg-info m-2">{{ item.type }}</span>
+                                        <span class="badge bg-info m-2">{{ item.estimation }} pts.</span>
+                                    </h6>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="col col-2">
+                    <h6>IN PROGRESS</h6>
+                    @for(item of boardItems; track item.id) {
+                        @if(item.state === 'IN_PROGRESS') {
+                            <div class="card m-2 bg-light" (click)="showItemDetail(item)">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ item.title }} 
+                                        <span class="badge bg-info m-2">{{ item.type }}</span>
+                                        <span class="badge bg-info m-2">{{ item.estimation }} pts.</span>
+                                    </h6>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="col col-2">
+                    <h6>CODE REVIEW</h6>         
+                    @for(item of boardItems; track item.id) {
+                        @if(item.state === 'CODE_REVIEW') {
+                            <div class="card m-2 bg-light" (click)="showItemDetail(item)">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ item.title }} 
+                                        <span class="badge bg-info m-2">{{ item.type }}</span>
+                                        <span class="badge bg-info m-2">{{ item.estimation }} pts.</span>
+                                    </h6>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="col col-2">
+                    <h6>IN TEST</h6>  
+                    @for(item of boardItems; track item.id) {
+                        @if(item.state === 'IN_TEST') {
+                            <div class="card m-2 bg-light" (click)="showItemDetail(item)">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ item.title }} 
+                                        <span class="badge bg-info m-2">{{ item.type }}</span>
+                                        <span class="badge bg-info m-2">{{ item.estimation }} pts.</span>
+                                    </h6>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="col col-2">
+                    <h6>READY FOR PROD</h6>                      
+                    @for(item of boardItems; track item.id) {
+                        @if(item.state === 'READY_FOR_PROD') {
+                            <div class="card m-2 bg-light" (click)="showItemDetail(item)">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ item.title }} 
+                                        <span class="badge bg-info m-2">{{ item.type }}</span>
+                                        <span class="badge bg-info m-2">{{ item.estimation }} pts.</span>
+                                    </h6>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>    
+                <div class="col col-2">
+                    <h6>DONE</h6>                        
+                    @for(item of boardItems; track item.id) {
+                        @if(item.state === 'DONE') {
+                            <div class="card m-2 bg-light" (click)="showItemDetail(item)">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ item.title }} 
+                                        <span class="badge bg-info m-2">{{ item.type }}</span>
+                                        <span class="badge bg-info m-2">{{ item.estimation }} pts.</span>
+                                    </h6>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        } @else {
+            <p>No items found</p>
+        }
+    } @else {
+        <p>Loading items...</p>
+    }
+</div>
+@if(isShowItem) {
+    <div class="m-2">
+        <app-item-detail [item]="selectedItem" [boardId]="boardId" (closeItemEvent)="closeItemDetails()"></app-item-detail>
+    </div>
+    
+}
+<app-board-backlog (showBacklogItem)="showBacklogItem($event)" ></app-board-backlog>

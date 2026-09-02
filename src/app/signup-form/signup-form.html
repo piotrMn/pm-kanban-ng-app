@@ -1,0 +1,28 @@
+<div class="m-5">
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+        <h2>Sign Up</h2>
+        <div class="form-group">
+            <label for="username">Your name:</label>
+            <input id="username" type="text" formControlName="username" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="email">Your email:</label>
+            <input id="email" type="email" formControlName="email" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input id="password" type="password" formControlName="password" class="form-control" />
+            @if(signupForm.get('password')?.invalid && signupForm.get('password')?.touched) {
+                <small class="form-text text-muted">Password must be at least 8 characters long.</small> 
+            }
+        </div>
+        <div class="form-group">
+            <label for="password">Repeat password:</label>
+            <input id="password2" type="password" formControlName="password2" class="form-control" />
+            @if(signupForm.get('password2')?.errors?.['passwordMismatch'] && signupForm.get('password2')?.touched) {
+                <small class="form-text text-muted">Passwords do not match.</small>
+            }
+        </div>
+        <button type="submit" [disabled]="!signupForm.valid" class="btn btn-primary">Sign Up</button>
+    </form>
+</div>

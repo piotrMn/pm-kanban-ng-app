@@ -1,0 +1,24 @@
+<div class="m-5">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <h2>Log In</h2>
+        <div class="form-group">
+            <label for="email">User email:</label>
+            <input id="email" type="email" formControlName="email" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input id="password" type="password" formControlName="password" class="form-control" />
+            @if(loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+                <small class="form-text text-muted">Password must be at least 8 characters long.</small> 
+            }
+        </div>
+        @if(loginForm.getError('invalidUsernameOrPassword') && showInvalidError) {
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Login error</strong> Invallid username or password
+                <button type="button" class="btn-close" aria-label="Close" (click)="dismissLoginError()"></button>
+            </div>
+        }
+        <button type="submit" [disabled]="!loginForm.valid" class="btn btn-primary mt-2">Log In</button>
+    </form>
+</div>
+  

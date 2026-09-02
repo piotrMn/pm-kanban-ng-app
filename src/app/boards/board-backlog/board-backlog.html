@@ -1,0 +1,38 @@
+<div class="container mt-5">
+    <div>
+        <h6>Backlog</h6>
+    </div>
+    <div class="row">
+    @if(items; as items) {
+        @for(item of items; track item.id) {
+        <div class="card m-2 bg-light d-inline" (click)="showItemDetail(item)">
+            <div class="card-body">
+                <h6 class="card-title">{{ item.title }} 
+                <span class="badge bg-info m-2">{{ item.type }}</span>
+                <span class="badge bg-info m-2">{{ item.estimation }} pts.</span>
+                </h6>
+            </div>
+        </div>
+        }   
+    }
+    </div>
+
+<!--             <div class="d-inline p-2 bg-primary text-white">Div 1</div>
+            <div class="row">
+                <div class="col p-1">
+                    <div class="card w-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.title }} 
+                                <span class="badge bg-info m-2">{{ item.type }}</span>
+                                <span class="badge bg-info m-2">{{ item.state }}</span>
+                                <span class="badge bg-info m-2">{{ item.estimation }} pts.</span>
+                            </h5>
+                            <p class="card-text">{{ item.description }}</p>
+                            <h6>Assigned to: {{ item.assignedTo.name }}</h6>
+                            <h6>Created by: {{ item.createdBy.name }}</h6>
+                            <h6>Created at: {{ item.createdAt | date:'medium' }}</h6>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+</div>

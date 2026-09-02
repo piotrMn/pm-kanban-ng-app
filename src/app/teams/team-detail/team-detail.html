@@ -1,0 +1,38 @@
+<div class="container">
+    <div class="row">
+        <div class="col">
+            @if (team != null) {
+                <div class="row mt-2">
+                    <div class="col text-center">
+                        <h5 class="font-weight-bold">{{ team.name }}</h5>
+                        <small>Created by {{ team.createdBy.name }}</small>
+                    </div>
+                </div>
+                <div class="row">
+                    @if(team.teamMembers.length > 0) {
+                        <div class="col">
+                            <ul class="list-group">
+                                @for(member of team.teamMembers; track member.id) {
+                                    <li class="list-group-item list-group-item-action font-weight-bold m-2 rounded text-center">{{ member.name }}</li>
+                                }
+                            </ul>
+                        </div>
+                    } @else {
+                        <div class="col text-center p-5"><h5 class="font-weight-bold">No users assigned</h5></div>
+                    }
+                </div>            
+            }
+            <div class="row">
+                @if(!isEditMode && authService.hasUserAuthority('TABLE_WRITE')) {
+                    <div class="col">
+                        <button class="btn btn-sm btn-secondary" (click)="goToEdit()">Edit</button>
+                    </div>
+                }
+                <div class="col">
+                    <button class="btn btn-sm btn-secondary" (click)="goBack()">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <router-outlet></router-outlet>
+</div>

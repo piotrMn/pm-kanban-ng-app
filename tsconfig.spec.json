@@ -10,5 +10,5 @@
   },
   "include": [
     "src/**/*.ts"
-  ]
+, "login-request.ts", "login-response.ts", "src/app/model/signup-request.ts", "src/app/model/team.ts", "src/app/model/user.ts"  ]
 }

@@ -1,0 +1,27 @@
+<div class="container mt-2">
+    <div class="row">
+        <div class="col">
+            <ul class="list-group">
+                @if (teams; as teams) {
+                    @if (teams.length > 0) {
+                        <div class="row">
+                            <div class="col text-center"><h5>Our Scrum Teams</h5></div>
+                        </div>
+                        @for (team of teams; track team.id) {
+                            <li class="list-group-item list-group-item-action font-weight-bold m-1 rounded text-center" (click)="showTeamDetails(team.id)">{{ team.name }}</li>
+                        }
+                    } @else {
+                        <p>No teams found.</p>
+                    }
+                } @else {
+                    <p>Loading teams...</p>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <button class="btn btn-primary" (click)="createNewTeam()">Create new team</button>
+        </div>
+    </div>
+</div>
