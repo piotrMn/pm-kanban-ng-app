@@ -1,41 +1,48 @@
 <div class="container">
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-      <div>
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link active font-weight-bold" routerLink="">Home</a>
-          </li>
-          @if (authService.isAuthenticated()) {
-            <li class="nav-item">
-              <a class="nav-link active font-weight-bold" routerLink="/teams">Teams</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active font-weight-bold" routerLink="/boards">Boards</a>
-            </li>
-          }
-        </ul>
-      </div>
-      <div class="hover-overlay">
-        <ul class="navbar-nav ms-auto">
-          @if (authService.isAuthenticated()) {
-            <li class="nav-item">
-              <a class="nav-link active font-weight-bold">Hi, {{ authService.getUserName() }}</a>
-            </li>
-            <li class="nav-item">
-              <button class="btn font-weight-bold" (click)="authService.logout()">LogOut</button>
-            </li>
-          } @else {
-            <li class="nav-item">
-              <a class="nav-link active font-weight-bold" routerLink="/login">LogIn</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active font-weight-bold" routerLink="/signup">SignUp</a>
-            </li>
-          }
-        </ul>
-      </div>
+  <div class="row">
+    <div class="col">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <div>
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active font-weight-bold" routerLink="">Home</a>
+              </li>
+              @if (authService.isAuthenticated()) {
+                <li class="nav-item">
+                  <a class="nav-link active font-weight-bold" routerLink="/teams">Teams</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active font-weight-bold" routerLink="/boards">Boards</a>
+                </li>
+              }
+            </ul>
+          </div>
+          <div class="hover-overlay">
+            <ul class="navbar-nav ms-auto">
+              @if (authService.isAuthenticated()) {
+                <li class="nav-item">
+                  <a class="nav-link active font-weight-bold">Hi, {{ authService.getUserName() }}</a>
+                </li>
+                <li class="nav-item">
+                  <button class="btn font-weight-bold" (click)="authService.logout()">LogOut</button>
+                </li>
+              } @else {
+                <li class="nav-item">
+                  <a class="nav-link active font-weight-bold" routerLink="/login">LogIn</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active font-weight-bold" routerLink="/signup">SignUp</a>
+                </li>
+              }
+            </ul>
+          </div>
+        </div>
+      </nav>
     </div>
-  </nav>
+  </div>
 </div>
+
+
+
 

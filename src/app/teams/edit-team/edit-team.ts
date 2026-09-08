@@ -29,13 +29,9 @@ export class EditTeam implements OnInit {
       }
       )
     })
-    if (!this.userService.allUsersSubject.value) {
-      this.userService.getAllUsers().subscribe(
-        () => this.userService.allUsersSubject.subscribe(users => this.users = users)
-      )
-    } else {
-      this.userService.allUsersSubject.subscribe(users => this.users = users)
-    }
+    this.userService.allTeamsObs().subscribe(
+      users => this.users = users
+    )
   }
 
   removeUserFromTeam(teamId: string, userId: string) {

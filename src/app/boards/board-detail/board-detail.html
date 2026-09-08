@@ -1,91 +1,119 @@
-<div class="container">
-    @if(boardItems | async; as boardItems) {
+<div class="container m-2">
+    <div class="row">
+        @if (wipLimits) {
+            <p>Hello</p>
+            <p>{{ itemCountMap.get('TO_DO') }}</p>
+        }
+    </div>
+    <div class="row">
+        <div class="m-3 text-center">
+            <h4>{{ boardName }}</h4>
+        </div>
+    </div>
+    <div class="row">
+        @if(authService.hasAuthority('ITEM_WRITE')) {
+            <button class="btn btn-secondary m-2" (click)="createItem()">Create item</button>
+        }
+    </div>
+    @if(boardItems; as boardItems) {
         @if(boardItems.length > 0) {
             <div class="row">
-                <div class="col col-2">
+                <div class="col col-2 text-center">
                     <h6>READY</h6>
                     @for(item of boardItems; track item.id) {
                         @if(item.state === 'READY') {
-                            <div class="card m-2 bg-light" (click)="showItemDetail(item)">
+                            <div class="card m-2 bg-warning" (click)="showItemDetail(item)">
+                                <div class="card-header"><h6>{{ item.title }}</h6></div>
                                 <div class="card-body">
-                                    <h6 class="card-title">{{ item.title }} 
-                                        <span class="badge bg-info m-2">{{ item.type }}</span>
-                                        <span class="badge bg-info m-2">{{ item.estimation }} pts.</span>
+                                    <p>{{ item.createdAt | date }}</p>
+                                    <h6>
+                                        <span class="badge bg-dark">{{ item.type }}</span>
+                                        <span class="badge bg-dark">{{ item.estimation }} pts.</span>
                                     </h6>
                                 </div>
                             </div>
                         }
                     }
                 </div>
-                <div class="col col-2">
+                <div class="col col-2 text-center">
                     <h6>IN PROGRESS</h6>
                     @for(item of boardItems; track item.id) {
                         @if(item.state === 'IN_PROGRESS') {
-                            <div class="card m-2 bg-light" (click)="showItemDetail(item)">
+                            <div class="card m-2 bg-warning" (click)="showItemDetail(item)">
+                                <div class="card-header"><h6>{{ item.title }}</h6></div>
                                 <div class="card-body">
-                                    <h6 class="card-title">{{ item.title }} 
-                                        <span class="badge bg-info m-2">{{ item.type }}</span>
-                                        <span class="badge bg-info m-2">{{ item.estimation }} pts.</span>
+                                    <p>{{ item.createdAt | date }}</p>
+                                    <h6>
+                                        <span class="badge bg-dark">{{ item.type }}</span>
+                                        <span class="badge bg-dark">{{ item.estimation }} pts.</span>
                                     </h6>
                                 </div>
                             </div>
                         }
                     }
                 </div>
-                <div class="col col-2">
+                <div class="col col-2 text-center">
                     <h6>CODE REVIEW</h6>         
                     @for(item of boardItems; track item.id) {
                         @if(item.state === 'CODE_REVIEW') {
-                            <div class="card m-2 bg-light" (click)="showItemDetail(item)">
+                            <div class="card m-2 bg-warning" (click)="showItemDetail(item)">
+                                <div class="card-header"><h6>{{ item.title }}</h6></div>
                                 <div class="card-body">
-                                    <h6 class="card-title">{{ item.title }} 
-                                        <span class="badge bg-info m-2">{{ item.type }}</span>
-                                        <span class="badge bg-info m-2">{{ item.estimation }} pts.</span>
+                                    <p>{{ item.createdAt | date }}</p>
+                                    <h6>
+                                        <span class="badge bg-dark">{{ item.type }}</span>
+                                        <span class="badge bg-dark">{{ item.estimation }} pts.</span>
                                     </h6>
                                 </div>
                             </div>
                         }
                     }
                 </div>
-                <div class="col col-2">
+                <div class="col col-2 text-center">
                     <h6>IN TEST</h6>  
                     @for(item of boardItems; track item.id) {
                         @if(item.state === 'IN_TEST') {
-                            <div class="card m-2 bg-light" (click)="showItemDetail(item)">
+                            <div class="card m-2 bg-warning" (click)="showItemDetail(item)">
+                                <div class="card-header"><h6>{{ item.title }}</h6></div>
                                 <div class="card-body">
-                                    <h6 class="card-title">{{ item.title }} 
-                                        <span class="badge bg-info m-2">{{ item.type }}</span>
-                                        <span class="badge bg-info m-2">{{ item.estimation }} pts.</span>
+                                    <p>{{ item.createdAt | date }}</p>
+                                    <h6>
+                                        <span class="badge bg-dark">{{ item.type }}</span>
+                                        <span class="badge bg-dark">{{ item.estimation }} pts.</span>
                                     </h6>
                                 </div>
                             </div>
                         }
                     }
                 </div>
-                <div class="col col-2">
+                <div class="col col-2 text-center">
                     <h6>READY FOR PROD</h6>                      
                     @for(item of boardItems; track item.id) {
                         @if(item.state === 'READY_FOR_PROD') {
-                            <div class="card m-2 bg-light" (click)="showItemDetail(item)">
+                            <div class="card m-2 bg-warning" (click)="showItemDetail(item)">
+                                <div class="card-header"><h6>{{ item.title }}</h6></div>
                                 <div class="card-body">
-                                    <h6 class="card-title">{{ item.title }} 
-                                        <span class="badge bg-info m-2">{{ item.type }}</span>
-                                        <span class="badge bg-info m-2">{{ item.estimation }} pts.</span>
+                                    <p>{{ item.createdAt | date }}</p>
+                                    <h6>
+                                        <span class="badge bg-dark">{{ item.type }}</span>
+                                        <span class="badge bg-dark">{{ item.estimation }} pts.</span>
                                     </h6>
                                 </div>
                             </div>
                         }
                     }
                 </div>    
-                <div class="col col-2">
+                <div class="col col-2 text-center">
                     <h6>DONE</h6>                        
                     @for(item of boardItems; track item.id) {
                         @if(item.state === 'DONE') {
-                            <div class="card m-2 bg-light" (click)="showItemDetail(item)">
+                            <div class="card m-2 bg-warning" (click)="showItemDetail(item)">
+                                <div class="card-header"><h6>{{ item.title }}</h6></div>
                                 <div class="card-body">
-                                    <h6 class="card-title">{{ item.title }} 
-                                        <span class="badge bg-info m-2">{{ item.type }}</span>
-                                        <span class="badge bg-info m-2">{{ item.estimation }} pts.</span>
+                                    <p>{{ item.createdAt | date }}</p>
+                                    <h6>
+                                        <span class="badge bg-dark">{{ item.type }}</span>
+                                        <span class="badge bg-dark">{{ item.estimation }} pts.</span>
                                     </h6>
                                 </div>
                             </div>
@@ -93,6 +121,14 @@
                     }
                 </div>
             </div>
+            @if(isShowItem) {
+            <div class="m-2">
+                <app-item-detail [item]="selectedItem" [boardId]="boardId" (closeItemEvent)="closeItemDetails()"></app-item-detail>
+            </div>
+            }
+            @if(showCreateItem) {
+                <app-item-create (closeCreateItemEvent)="closeCreateItem()"></app-item-create>
+            }
         } @else {
             <p>No items found</p>
         }
@@ -100,10 +136,5 @@
         <p>Loading items...</p>
     }
 </div>
-@if(isShowItem) {
-    <div class="m-2">
-        <app-item-detail [item]="selectedItem" [boardId]="boardId" (closeItemEvent)="closeItemDetails()"></app-item-detail>
-    </div>
-    
-}
+
 <app-board-backlog (showBacklogItem)="showBacklogItem($event)" ></app-board-backlog>

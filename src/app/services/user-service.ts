@@ -11,12 +11,19 @@ export class UserService {
 
   public allUsersSubject: BehaviorSubject<User[] | null> = new BehaviorSubject<User[] | null>(null)
 
-    constructor(private http: HttpClient){}
+  constructor(private http: HttpClient){}
 
-    getAllUsers(): Observable<User[]> {
-      return this.http.get<User[]>(`${ApiConstants.BASE_URL}/users`).pipe(
-        tap(users => this.allUsersSubject.next(users))
-      )
+  allTeamsObs(): Observable<User[] | null> {
+    if (this.allUsersSubject.value == null) {
+      this.getAllUsers().subscribe()
     }
+    return this.allUsersSubject.asObservable()
+  }
+
+  private getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${ApiConstants.BASE_URL}/users`).pipe(
+      tap(users => this.allUsersSubject.next(users))
+    )
+  }
   
 }

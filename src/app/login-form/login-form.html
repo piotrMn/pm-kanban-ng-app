@@ -13,7 +13,7 @@
             }
         </div>
         @if(loginForm.getError('invalidUsernameOrPassword') && showInvalidError) {
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <div class="alert alert-warning alert-dismissible fade show m-2" role="alert">
                 <strong>Login error</strong> Invallid username or password
                 <button type="button" class="btn-close" aria-label="Close" (click)="dismissLoginError()"></button>
             </div>

@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 import { BehaviorSubject, tap } from 'rxjs';
 import { Item } from '../model/item'; 
 import { Observable } from 'rxjs';
 import { ApiConstants } from '../api-constants';
 import { addBodyClass } from '@angular/cdk/schematics';
+import { CreateItemRequest } from '../model/create-item-request';
 
 @Injectable({
   providedIn: 'root',
@@ -33,6 +34,34 @@ export class ItemService {
     let body: any = {}
     body.state = newState
     return this.http.post<string>(`${ApiConstants.BASE_URL}/items/${itemId}/state`, body).pipe(
+      tap(() => this.getAllBoardItems(boardId).subscribe())
+    )
+  }
+
+  public updateItemAssignedTo(itemId: string, assignedToId: string, boardId: string): Observable<string> {
+    let body: any = {}
+    body.assignedTo = assignedToId
+    return this.http.post<string>(`${ApiConstants.BASE_URL}/items/${itemId}/assign`, body).pipe(
+      tap(() => this.getAllBoardItems(boardId).subscribe())
+    )
+  }
+
+  public updateItemEstimation(itemId: string, newEstimation: number, boardId: string): Observable<string> {
+    let body: any = {}
+    body.estimation = newEstimation
+    return this.http.post<string>(`${ApiConstants.BASE_URL}/items/${itemId}/estimation`, body).pipe(
+      tap(() => this.getAllBoardItems(boardId).subscribe())
+    )
+  }
+
+  public saveItem(request: CreateItemRequest): Observable<string> {
+    return this.http.post<string>(`${ApiConstants.BASE_URL}/items`, request).pipe(
+      tap(() => this.getAllBoardItems(request.boardId).subscribe())
+    )
+  }
+
+  public deleteItem(itemId: string, boardId: string): Observable<string> {
+    return this.http.delete<string>(`${ApiConstants.BASE_URL}/items/${itemId}`).pipe(
       tap(() => this.getAllBoardItems(boardId).subscribe())
     )
   }

@@ -1,46 +1,94 @@
 <div class="container">
-    @if(item) {
-    <div class="row">
-        <div class="col col-10">
-            <div class="row m-2">
-                <div class="card w-100">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ item.title }} 
-                            <span class="badge bg-info m-2">{{ item.type }}</span>
-                            <span class="badge bg-info m-2">{{ item.state }}</span>
-                            <span class="badge bg-info m-2">{{ item.estimation }} pts.</span>
+    @if (item) {
+        <div class="row">
+            <div class="row">
+                <div class="card w-100 bg-light">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <span class="badge bg-secondary m-1">{{ item.type }}</span>
+                            <span class="badge bg-secondary m-1">{{ item.state }}</span>   
+                            <span class="badge bg-secondary m-1">{{ item.estimation }} pts.</span>                                                                
                         </h5>
-                        <p class="card-text">{{ item.description }}</p>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.title }}</h5>
+                        <p class="card-text">{{ item.description }}</p>           
                         <h6>Assigned to: {{ item.assignedTo.name }}</h6>
-                        <h6>Created by: {{ item.createdBy.name }}</h6>
-                        <h6>Created at: {{ item.createdAt | date:'medium' }}</h6>
+                        <h6>Created by: {{ item.createdBy.name }}</h6>    
+                        <h6>Created at: {{ item.createdAt | date:'medium' }}</h6>                                                          
                     </div>
                 </div>
             </div>
-            <div class="row m-2">
-                <button class="btn btn-secondary" (click)="closeItemDetail()">Close</button>
-            </div>
         </div>
-        <div class="col col-2">
-            <div>
-                <h6>Change state</h6>
-                <mat-form-field>
-                    <mat-label>States</mat-label>
-                    <mat-select name="newState" [(value)]="newState">
-                        <mat-option value="TO_DO">TO_DO</mat-option>
-                        <mat-option value="IN_PROGRESS">IN_PROGRESS</mat-option>
-                        <mat-option value="IN_TEST">IN_TEST</mat-option>
-                        <mat-option value="DONE">DONE</mat-option>
-                        <mat-option value="READY_FOR_PROD">READY_FOR_PROD</mat-option>
-                        <mat-option value="READY">READY</mat-option>
-                    </mat-select>
-                </mat-form-field> 
+        <div class="row m-2">
+            <div class="col col-3">
+                <div class="m-2">
+                    <h6>Change state</h6>
+                    <mat-form-field>
+                        <mat-label>States</mat-label>
+                        <mat-select name="newState" [(value)]="newState">
+                            @if (item.state !== 'TO_DO') {
+                                <mat-option value="TO_DO">TO_DO</mat-option>
+                            }
+                            @if (item.state !== 'IN_PROGRESS') {
+                                <mat-option value="IN_PROGRESS">IN_PROGRESS</mat-option>
+                            }
+                            @if (item.state !== 'IN_TEST') {
+                                <mat-option value="IN_TEST">IN_TEST</mat-option>
+                            }
+                            @if (item.state !== 'DONE') {
+                                <mat-option value="DONE">DONE</mat-option>
+                            }         
+                            @if (item.state !== 'READY_FOR_PROD') {
+                                <mat-option value="READY_FOR_PROD">READY_FOR_PROD</mat-option>
+                            }        
+                            @if (item.state !== 'READY') {
+                                <mat-option value="READY">READY</mat-option>
+                            }                                                                                                                            
+                        </mat-select>
+                    </mat-form-field> 
+                </div>  
             </div>
-            <div>
+            <div class="col col-1">
                 <button class="btn btn-secondary" (click)="updateItemState(item.id)">Save</button>
             </div>
+            <div class="col col-3">
+                <div class="m-2">
+                    <h6>Assign to</h6>
+                    <mat-form-field>
+                        <mat-label>Users</mat-label>
+                        <mat-select name="newAssignedTo" [(value)]="newAssignedTo">
+                            @if (teamMembers) {
+                                @for (teamMember of teamMembers; track teamMember.id) {
+                                    @if (teamMember.id !== item.assignedTo.id) {
+                                        <mat-option [value]="teamMember.id">{{ teamMember.name }}</mat-option>
+                                    }
+                                }
+                            } @else {
+                                <p>Loading users...</p>
+                            }
+                        </mat-select>
+                    </mat-form-field>      
+                </div>
+            </div>
+            <div class="col col-1">
+                <button class="btn btn-secondary" (click)="updateItemAssignedTo(item.id)">Save</button>
+            </div>
+            <div class="col col-3">
+                <div class="m-2">
+                    <h6>Estimation:</h6>
+                    <input type="number" min="1" step="1" [value]="item.estimation" [(ngModel)]="newEstimation" />
+                </div>
+            </div>  
+            <div class="col col-1">
+                <button class="btn btn-secondary" (click)="updateItemEstimation(item.id)">Save</button>
+            </div>                                  
         </div>
-    </div>
-
+        <div class="row m-1">
+            <button class="btn btn-secondary" (click)="deleteItem(item.id)">Delete Item</button>
+        </div>
+        <div class="row m-1">
+            <button class="btn btn-secondary" (click)="closeItemDetail()">Close</button>
+        </div>
     }
 </div>

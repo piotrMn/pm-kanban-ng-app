@@ -1,0 +1,72 @@
+<div class="m-5">
+    <form [formGroup]="createItemForm" (ngSubmit)="onSubmit()">
+        <h2>Create item</h2>
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input id="title" type="text" formControlName="title" class="form-control" />
+            @if(createItemForm.get('title')?.invalid && createItemForm.get('title')?.touched) {
+                <small class="form-text text-muted">Title must be at least 6 characters long.</small> 
+            }
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <input id="description" type="text" formControlName="description" class="form-control" />
+            @if(createItemForm.get('description')?.invalid && createItemForm.get('description')?.touched) {
+                <small class="form-text text-muted">Description must not be empty.</small> 
+            }
+        </div>
+        <div class="form-group">
+            <label for="estimation">Estimation:</label>
+            <input id="estimation" type="number" formControlName="estimation" class="form-control" />
+            @if(createItemForm.get('estimation')?.errors?.['lessThanOne']) {
+                <small class="form-text text-muted">Estimation at least one.</small> 
+            }
+        </div>
+        <div class="form-group">
+            <label for="type">Type:</label>
+            <select id="type" formControlName="type" class="form-control">
+            <option [ngValue]="null" disabled>Select type</option>
+            @for (itemType of itemTypes; track itemType) {
+            <option [ngValue]="itemType">{{ itemType }}</option>
+            }
+            </select>
+            @if (createItemForm.get('type')?.invalid && createItemForm.get('type')?.touched) {
+            <small class="form-text text-muted">
+                Type is required.
+            </small>
+            }
+        </div>
+        <div class="form-group">
+            <label for="state">State:</label>
+            <select id="state" formControlName="state" class="form-control">
+            <option [ngValue]="null" disabled>Select state</option>
+            @for (itemState of itemStates; track itemState) {
+                <option [ngValue]="itemState">{{ itemState }}</option>
+            }
+            </select>
+            @if (createItemForm.get('type')?.invalid && createItemForm.get('type')?.touched) {
+            <small class="form-text text-muted">
+                Type is required.
+            </small>
+            }
+        </div>
+        <div class="form-group">
+            <label for="assignTo">Assign to:</label>
+            <select id="assignTo" formControlName="assignedTo" class="form-control">
+            <option [ngValue]="null" disabled>Select user</option>
+            @for (user of teamMembers; track user.id) {
+                @if (user) {
+                    <option [ngValue]="user.id">{{ user.name }}</option>
+                }
+            }
+            </select>
+            @if (createItemForm.get('type')?.invalid && createItemForm.get('type')?.touched) {
+            <small class="form-text text-muted">
+                Type is required.
+            </small>
+            }
+        </div>  
+        <button type="submit" [disabled]="!createItemForm.valid" class="btn btn-secondary mt-2">Create</button>
+        <button type="button" class="btn btn-secondary mt-2" (click)="closeCreateItem()">Close</button>
+    </form>
+</div>

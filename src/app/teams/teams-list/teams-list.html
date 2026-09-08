@@ -1,27 +1,26 @@
-<div class="container mt-2">
-    <div class="row">
-        <div class="col">
-            <ul class="list-group">
-                @if (teams; as teams) {
-                    @if (teams.length > 0) {
-                        <div class="row">
-                            <div class="col text-center"><h5>Our Scrum Teams</h5></div>
+<div class="container mt-4">
+    @if (teams; as teams) {
+        @if (teams.length > 0) {
+            <h5 class="mb-3 text-center fw-semibold">Our Scrum Teams</h5>
+            <div class="list-group gap-2">
+            @for (team of teams; track team.id) {
+                <button type="button" class="list-group-item list-group-item-action rounded-3 border-0 shadow-sm p-3"
+                (click)="showTeamDetails(team.id)">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-light text-black d-flex align-items-center justify-content-center fw-bold flex-shrink-0">
+                            {{ team.name }}
                         </div>
-                        @for (team of teams; track team.id) {
-                            <li class="list-group-item list-group-item-action font-weight-bold m-1 rounded text-center" (click)="showTeamDetails(team.id)">{{ team.name }}</li>
-                        }
-                    } @else {
-                        <p>No teams found.</p>
-                    }
-                } @else {
-                    <p>Loading teams...</p>
-                }
-            </ul>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col text-center">
-            <button class="btn btn-primary" (click)="createNewTeam()">Create new team</button>
-        </div>
+                    </div>
+                </button>
+            }
+            </div>
+        } @else {
+            <p>No teams found.</p>
+        }
+    } @else {
+        <p>Loading teams...</p>
+    }
+    <div class="text-center m-2">
+        <button class="btn btn-info" (click)="createNewTeam()">Create new team</button>
     </div>
 </div>

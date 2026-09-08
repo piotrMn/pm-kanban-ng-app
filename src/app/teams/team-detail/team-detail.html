@@ -23,7 +23,7 @@
                 </div>            
             }
             <div class="row">
-                @if(!isEditMode && authService.hasUserAuthority('TABLE_WRITE')) {
+                @if(!isEditMode && authService.hasAuthority('TABLE_WRITE')) {
                     <div class="col">
                         <button class="btn btn-sm btn-secondary" (click)="goToEdit()">Edit</button>
                     </div>

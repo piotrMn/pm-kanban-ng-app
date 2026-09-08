@@ -11,7 +11,7 @@ export interface Item {
     estimation: number,
     createdAt: string,
     createdBy: User,
-    teamName: string,
-    assignedTo: User
+    assignedTo: User,
+    boardId: string
 
 }

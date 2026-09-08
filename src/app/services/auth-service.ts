@@ -62,7 +62,16 @@ export class AuthService {
     }
   }
 
-  hasUserAuthority(authority: string): boolean {
+  getUserId(): string {
+    let loggedUser = localStorage.getItem('loggedUser')
+    if (loggedUser) {
+      return JSON.parse(loggedUser)['id']
+    } else {
+      return ''
+    }
+  }
+
+  hasAuthority(authority: string): boolean {
     let loggedUser = localStorage.getItem('loggedUser')
     if (loggedUser) {
       let authorities: string[] = JSON.parse(loggedUser)['authorities']
