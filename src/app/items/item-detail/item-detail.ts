@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Item } from '../../model/item';
 import { DatePipe, NgPlural } from '@angular/common';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
@@ -23,7 +23,7 @@ import { CreateCommentRequest } from '../../model/create-comment-request';
   templateUrl: './item-detail.html',
   styleUrl: './item-detail.css',
 })
-export class ItemDetail implements OnInit {
+export class ItemDetail implements OnInit, OnChanges {
 
   @Input() item!: Item | null
   @Input() boardId!: string
@@ -47,6 +47,17 @@ export class ItemDetail implements OnInit {
       this.authService = authService
     }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    let previous = changes['item']?.previousValue
+    let current = changes['item']?.currentValue
+    console.log(current)
+    if (previous && current && previous !== current) {
+      this.showEditPanel = false
+      this.showComments = false
+      this.newEstimation = current['estimation']
+    }
+  }
+
   ngOnInit(): void {
     this.route.params.pipe(
       map(params => params['id']),
@@ -63,6 +74,7 @@ export class ItemDetail implements OnInit {
     this.createCommentForm = this.formBuilder.group({
       content: ['', Validators.required],
     });
+    this.newEstimation = this.item?.estimation
   }
 
   closeItemDetail() {
@@ -121,10 +133,9 @@ export class ItemDetail implements OnInit {
         authorId: this.authService.getUserId(),
         itemId: itemId
       }
-      console.log(request)
       this.commentService.saveComment(request).subscribe(
         () => {
-          this.createCommentForm.reset
+          this.createCommentForm.reset()
           this.commentAddedEvent.emit(itemId)
         }
       )

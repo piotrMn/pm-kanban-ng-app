@@ -17,9 +17,7 @@
                         <h6>Created by: {{ item.createdBy.name }}</h6>    
                         <h6>Created at: {{ item.createdAt | date:'medium' }}</h6>                                                          
                     </div>
-                    @if (comments && comments.length > 0) {
-                        <button type="button" class="btn btn-secondary btn-sm mt-1" (click)="toggleComments()">Comments</button>
-                    }
+                    <button type="button" class="btn btn-secondary btn-sm mt-1" (click)="toggleComments()">Comments</button>
                     <button type="button" class="btn btn-secondary btn-sm mt-1" (click)="toggleEditPanel()">Edit</button>
                     @if (authService.hasAuthority('ITEM_WRITE')) {
                         <button type="button" class="btn btn-secondary btn-sm mt-1" (click)="deleteItem(item.id)">Delete Item</button>
@@ -29,21 +27,18 @@
 
             </div> 
         <div class="row">
-            @if (showAddComment) {
-
-            <form [formGroup]="createCommentForm" (ngSubmit)="onAddComment(item.id)">
-                <h6>Add comment</h6>
-                <div class="form-group">
-                    <label for="content">Content:</label>
-                    <input id="content" type="text" formControlName="content" class="form-control" />
-                </div>
-                <button type="submit" [disabled]="!createCommentForm.valid" class="btn btn-secondary mt-2">Add</button>
-            </form>
-
-            }
             @if (comments && showComments) {
+                @if (showAddComment) {
+                    <form [formGroup]="createCommentForm" (ngSubmit)="onAddComment(item.id)">
+                        <div class="form-group">
+                            <label for="content">Add comment:</label>
+                            <input id="content" type="text" formControlName="content" class="form-control" />
+                        </div>
+                        <button type="submit" [disabled]="!createCommentForm.valid" class="btn btn-secondary mt-2">Add</button>
+                    </form>
+                }
                 @for (comment of comments; track comment.id) {
-                    <div class="card w-100 bg-light">
+                    <div class="card w-100 bg-light m-1">
                         <div class="card-header">
                             <h6 class="card-title">
                                 <span>Created by: {{ comment.author.name }} at {{ comment.createdAt | date:'medium' }}</span>
@@ -120,7 +115,7 @@
                 <div class="col col-3">
                     <div class="m-2">
                         <h6>Estimation:</h6>
-                        <input type="number" min="1" step="1" [value]="item.estimation" [(ngModel)]="newEstimation" />
+                        <input type="number" min="1" step="1" [(ngModel)]="newEstimation" />
                     </div>
                 </div>  
                 <div class="col col-1">

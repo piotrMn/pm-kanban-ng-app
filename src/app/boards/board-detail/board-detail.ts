@@ -16,6 +16,7 @@ import { ItemState } from '../../model/wip-limit';
 import { User } from '../../model/user';
 import { Comment } from '../../model/comment';
 import { CommentService } from '../../services/comment-service';
+import { TeamService } from '../../services/team-service';
 
 @Component({
   selector: 'app-board-detail',
@@ -29,7 +30,7 @@ export class BoardDetail implements OnInit {
 
   constructor(private router: Router, private itemService: ItemService, private route: ActivatedRoute, 
     authService: AuthService, private boardService: BoardService, private wipLimitService: WipLimitService,
-    private commentService: CommentService){
+    private commentService: CommentService, private teamService: TeamService){
       this.authService = authService
     }
 
@@ -45,6 +46,7 @@ export class BoardDetail implements OnInit {
   itemCountMap!: Map<ItemState, number>
   wipLimitsMap!: Map<ItemState, number>
   comments!: Comment[] | null
+  teamName!: string | undefined
 
   ngOnInit(): void {
     this.route.params.pipe(
@@ -54,12 +56,17 @@ export class BoardDetail implements OnInit {
       this.itemService.allBoardItemsObs(boardId).subscribe(
         boardItems => {
           this.boardItems = boardItems
-          this.itemCountMap =  this.countItemsByState(this.boardItems as Item[])
+          this.itemCountMap =  this.countItemsByState(this.boardItems)
           this.boardService.allBoardsObs().subscribe(
             boards => {
               this.boardName = boards?.filter(b => b !== undefined).find(b => b.id === boardId)?.name
               this.teamId = boards?.filter(b => b !== undefined).find(b => b.id === boardId)?.team.id
-              this.teamMembers = boards?.filter(b => b !== undefined).find(b => b.id === boardId)?.team.teamMembers
+              this.teamName = boards?.filter(b => b !== undefined).find(b => b.id === boardId)?.team.name              
+              this.teamService.allTeamsObs().subscribe(
+                teams => {
+                  this.teamMembers = teams?.find(t => t.id === this.teamId)?.teamMembers
+                }
+                )
               }
             )
             this.wipLimitService.allWipLimitsObs().subscribe(
@@ -117,11 +124,13 @@ export class BoardDetail implements OnInit {
 
   allStates: ItemState[] = ["TO_DO", "READY", "IN_PROGRESS", "CODE_REVIEW", "IN_TEST", "READY_FOR_PROD", "DONE"];
 
-  countItemsByState(items: Item[]): Map<ItemState, number> {
+  countItemsByState(items: Item[] | null): Map<ItemState, number> {
     const counts = new Map<ItemState, number>(this.allStates.map(s => [s, 0]));
-    items.forEach(item => counts.set(item.state, (counts.get(item.state) ?? 0) + 1));
+    if (items && items.length > 0) {
+      items.forEach(item => counts.set(item.state, (counts.get(item.state) ?? 0) + 1));
+    }
   return counts;
 
-}
+  }
 
 }
