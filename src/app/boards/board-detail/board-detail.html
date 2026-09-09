@@ -1,11 +1,5 @@
 <div class="container m-2">
     <div class="row">
-        @if (wipLimits) {
-            <p>Hello</p>
-            <p>{{ itemCountMap.get('TO_DO') }}</p>
-        }
-    </div>
-    <div class="row">
         <div class="m-3 text-center">
             <h4>{{ boardName }}</h4>
         </div>
@@ -20,6 +14,7 @@
             <div class="row">
                 <div class="col col-2 text-center">
                     <h6>READY</h6>
+                    {{ itemCountMap.get('READY') }}/{{ wipLimitsMap.get('READY') }}
                     @for(item of boardItems; track item.id) {
                         @if(item.state === 'READY') {
                             <div class="card m-2 bg-warning" (click)="showItemDetail(item)">
@@ -37,6 +32,7 @@
                 </div>
                 <div class="col col-2 text-center">
                     <h6>IN PROGRESS</h6>
+                    {{ itemCountMap.get('IN_PROGRESS') }}/{{ wipLimitsMap.get('IN_PROGRESS') }}
                     @for(item of boardItems; track item.id) {
                         @if(item.state === 'IN_PROGRESS') {
                             <div class="card m-2 bg-warning" (click)="showItemDetail(item)">
@@ -53,7 +49,8 @@
                     }
                 </div>
                 <div class="col col-2 text-center">
-                    <h6>CODE REVIEW</h6>         
+                    <h6>CODE REVIEW</h6>
+                    {{ itemCountMap.get('CODE_REVIEW') }}/{{ wipLimitsMap.get('CODE_REVIEW') }}                    
                     @for(item of boardItems; track item.id) {
                         @if(item.state === 'CODE_REVIEW') {
                             <div class="card m-2 bg-warning" (click)="showItemDetail(item)">
@@ -71,6 +68,7 @@
                 </div>
                 <div class="col col-2 text-center">
                     <h6>IN TEST</h6>  
+                    {{ itemCountMap.get('IN_TEST') }}/{{ wipLimitsMap.get('IN_TEST') }}                          
                     @for(item of boardItems; track item.id) {
                         @if(item.state === 'IN_TEST') {
                             <div class="card m-2 bg-warning" (click)="showItemDetail(item)">
@@ -88,8 +86,9 @@
                 </div>
                 <div class="col col-2 text-center">
                     <h6>READY FOR PROD</h6>                      
+                    {{ itemCountMap.get('READY_FOR_PROD') }}/{{ wipLimitsMap.get('READY_FOR_PROD') }}   
                     @for(item of boardItems; track item.id) {
-                        @if(item.state === 'READY_FOR_PROD') {
+                        @if(item.state ==='READY_FOR_PROD') {
                             <div class="card m-2 bg-warning" (click)="showItemDetail(item)">
                                 <div class="card-header"><h6>{{ item.title }}</h6></div>
                                 <div class="card-body">
@@ -104,7 +103,8 @@
                     }
                 </div>    
                 <div class="col col-2 text-center">
-                    <h6>DONE</h6>                        
+                    <h6>DONE</h6> 
+                    {{ itemCountMap.get('DONE') }}/{{ wipLimitsMap.get('DONE') }}                                            
                     @for(item of boardItems; track item.id) {
                         @if(item.state === 'DONE') {
                             <div class="card m-2 bg-warning" (click)="showItemDetail(item)">
@@ -123,12 +123,22 @@
             </div>
             @if(isShowItem) {
             <div class="m-2">
-                <app-item-detail [item]="selectedItem" [boardId]="boardId" (closeItemEvent)="closeItemDetails()"></app-item-detail>
+                <app-item-detail [item]="selectedItem" 
+                [comments]="comments" 
+                [boardId]="boardId" 
+                (commentAddedEvent)="updateComments($event)"
+                (closeItemEvent)="closeItemDetails()"></app-item-detail>
             </div>
             }
             @if(showCreateItem) {
-                <app-item-create (closeCreateItemEvent)="closeCreateItem()"></app-item-create>
+                <app-item-create (closeCreateItemEvent)="closeCreateItem()" 
+                    [teamMembers]="teamMembers" 
+                    [itemCountMap]="itemCountMap"
+                    [wipLimitsMap]="wipLimitsMap"
+                    [boardId]="boardId">
+                </app-item-create>
             }
+            <app-board-backlog (showBacklogItem)="showBacklogItem($event)" [items]="boardItems"></app-board-backlog>
         } @else {
             <p>No items found</p>
         }
@@ -136,5 +146,3 @@
         <p>Loading items...</p>
     }
 </div>
-
-<app-board-backlog (showBacklogItem)="showBacklogItem($event)" ></app-board-backlog>

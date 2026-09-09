@@ -5,14 +5,16 @@
     <div class="row">
     @if(items; as items) {
         @for(item of items; track item.id) {
-        <div class="card m-2 bg-warning d-inline" (click)="showItemDetail(item)">
-            <div class="card-body">
-                <h6 class="card-title">{{ item.title }} 
-                <span class="badge bg-dark m-1">{{ item.type }}</span>
-                <span class="badge bg-dark m-1">{{ item.estimation }} pts.</span>
-                </h6>
-            </div>
-        </div>
+            @if(item.state === 'TO_DO') {
+                <div class="card m-2 bg-warning d-inline" (click)="showItemDetail(item)">
+                    <div class="card-body">
+                        <h6 class="card-title">{{ item.title }} 
+                        <span class="badge bg-dark m-1">{{ item.type }}</span>
+                        <span class="badge bg-dark m-1">{{ item.estimation }} pts.</span>
+                        </h6>
+                    </div>
+                </div>
+            }
         }   
     }
     </div>

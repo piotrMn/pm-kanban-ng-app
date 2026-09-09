@@ -6,8 +6,8 @@ import { AuthService } from '../../services/auth-service';
 import { User } from '../../model/user';
 import { BoardService } from '../../services/board-service';
 import { ActivatedRoute } from '@angular/router';
-import { map, tap } from 'rxjs';
 import { Output } from '@angular/core';
+import { ItemState } from '../../model/wip-limit';
 
 @Component({
   selector: 'app-item-create',
@@ -26,9 +26,12 @@ export class ItemCreate {
   ]
 
   @Output() closeCreateItemEvent = new EventEmitter<void>()
+  @Input() teamMembers!: User[] | undefined
+  @Input() itemCountMap: Map<ItemState, number> = new Map()
+  @Input() wipLimitsMap: Map<ItemState, number> = new Map()
+  @Input() boardId!: string
 
-  boardId!: string
-  teamMembers!: User[] | undefined
+  showWipLimitError: boolean = false
 
   constructor(private readonly formBuilder: FormBuilder, private itemService: ItemService, 
     private authService: AuthService, private boardService: BoardService,
@@ -53,18 +56,6 @@ export class ItemCreate {
       }]),
       assignedTo: []
     });
-    this.route.params.pipe(
-      map(params => params['id']),
-      tap(id => this.boardId = id)
-    ).subscribe(
-      boardId => {
-        this.boardService.allBoardsObs().subscribe(
-          boards => {
-            this.teamMembers = boards?.find(b => b.id === boardId)?.team?.teamMembers
-          }
-        )
-      }
-    )
   }
 
   onSubmit() {
@@ -72,12 +63,26 @@ export class ItemCreate {
       let createItemRequest: CreateItemRequest = this.createItemForm.value
       createItemRequest.createdBy = this.authService.getUserId()
       createItemRequest.boardId = this.boardId
-      console.log(createItemRequest)
-      this.itemService.saveItem(createItemRequest).subscribe()
+      if (this.isWipLimitReached(createItemRequest)) {
+        console.log('Wip Limit reached')
+        this.showWipLimitError = true
+      } else {
+        this.itemService.saveItem(createItemRequest).subscribe(
+          () => {
+            this.closeCreateItemEvent.emit()
+          }
+        )
+      }
     } else {
       console.log('Form invalid')
     }
 
+  }
+
+  private isWipLimitReached(request: CreateItemRequest): boolean {
+    let existing = this.itemCountMap.get(request.state as ItemState) as number
+    let maximum = this.wipLimitsMap.get(request.state as ItemState) as number
+    return existing === maximum
   }
 
   closeCreateItem() {

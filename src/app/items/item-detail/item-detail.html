@@ -17,78 +17,116 @@
                         <h6>Created by: {{ item.createdBy.name }}</h6>    
                         <h6>Created at: {{ item.createdAt | date:'medium' }}</h6>                                                          
                     </div>
+                    @if (comments && comments.length > 0) {
+                        <button type="button" class="btn btn-secondary btn-sm mt-1" (click)="toggleComments()">Comments</button>
+                    }
+                    <button type="button" class="btn btn-secondary btn-sm mt-1" (click)="toggleEditPanel()">Edit</button>
+                    @if (authService.hasAuthority('ITEM_WRITE')) {
+                        <button type="button" class="btn btn-secondary btn-sm mt-1" (click)="deleteItem(item.id)">Delete Item</button>
+                    }
+                    <button type="button" class="btn btn-secondary btn-sm mt-1" (click)="closeItemDetail()">Close</button>
                 </div>
-            </div>
+
+            </div> 
+        <div class="row">
+            @if (showAddComment) {
+
+            <form [formGroup]="createCommentForm" (ngSubmit)="onAddComment(item.id)">
+                <h6>Add comment</h6>
+                <div class="form-group">
+                    <label for="content">Content:</label>
+                    <input id="content" type="text" formControlName="content" class="form-control" />
+                </div>
+                <button type="submit" [disabled]="!createCommentForm.valid" class="btn btn-secondary mt-2">Add</button>
+            </form>
+
+            }
+            @if (comments && showComments) {
+                @for (comment of comments; track comment.id) {
+                    <div class="card w-100 bg-light">
+                        <div class="card-header">
+                            <h6 class="card-title">
+                                <span>Created by: {{ comment.author.name }} at {{ comment.createdAt | date:'medium' }}</span>
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ comment.content }}</p>     
+                        </div>
+                        @if (authService.hasAuthority('ITEM_WRITE')) {
+                            <div class="col col-2">
+                                <button type="button" class="btn btn-secondary btn-sm" (click)="deleteComment(comment.id, item.id)">Delete</button>
+                            </div>
+                        }
+                    </div>
+                }
+            }
         </div>
-        <div class="row m-2">
-            <div class="col col-3">
-                <div class="m-2">
-                    <h6>Change state</h6>
-                    <mat-form-field>
-                        <mat-label>States</mat-label>
-                        <mat-select name="newState" [(value)]="newState">
-                            @if (item.state !== 'TO_DO') {
-                                <mat-option value="TO_DO">TO_DO</mat-option>
-                            }
-                            @if (item.state !== 'IN_PROGRESS') {
-                                <mat-option value="IN_PROGRESS">IN_PROGRESS</mat-option>
-                            }
-                            @if (item.state !== 'IN_TEST') {
-                                <mat-option value="IN_TEST">IN_TEST</mat-option>
-                            }
-                            @if (item.state !== 'DONE') {
-                                <mat-option value="DONE">DONE</mat-option>
-                            }         
-                            @if (item.state !== 'READY_FOR_PROD') {
-                                <mat-option value="READY_FOR_PROD">READY_FOR_PROD</mat-option>
-                            }        
-                            @if (item.state !== 'READY') {
-                                <mat-option value="READY">READY</mat-option>
-                            }                                                                                                                            
-                        </mat-select>
-                    </mat-form-field> 
-                </div>  
-            </div>
-            <div class="col col-1">
-                <button class="btn btn-secondary" (click)="updateItemState(item.id)">Save</button>
-            </div>
-            <div class="col col-3">
-                <div class="m-2">
-                    <h6>Assign to</h6>
-                    <mat-form-field>
-                        <mat-label>Users</mat-label>
-                        <mat-select name="newAssignedTo" [(value)]="newAssignedTo">
-                            @if (teamMembers) {
-                                @for (teamMember of teamMembers; track teamMember.id) {
-                                    @if (teamMember.id !== item.assignedTo.id) {
-                                        <mat-option [value]="teamMember.id">{{ teamMember.name }}</mat-option>
-                                    }
+        </div>
+        @if (showEditPanel) {
+            <div class="row m-2">
+                <div class="col col-3">
+                    <div class="m-2">
+                        <h6>Change state</h6>
+                        <mat-form-field>
+                            <mat-label>States</mat-label>
+                            <mat-select name="newState" [(value)]="newState">
+                                @if (item.state !== 'TO_DO') {
+                                    <mat-option value="TO_DO">TO_DO</mat-option>
                                 }
-                            } @else {
-                                <p>Loading users...</p>
-                            }
-                        </mat-select>
-                    </mat-form-field>      
+                                @if (item.state !== 'IN_PROGRESS') {
+                                    <mat-option value="IN_PROGRESS">IN_PROGRESS</mat-option>
+                                }
+                                @if (item.state !== 'IN_TEST') {
+                                    <mat-option value="IN_TEST">IN_TEST</mat-option>
+                                }
+                                @if (item.state !== 'DONE') {
+                                    <mat-option value="DONE">DONE</mat-option>
+                                }         
+                                @if (item.state !== 'READY_FOR_PROD') {
+                                    <mat-option value="READY_FOR_PROD">READY_FOR_PROD</mat-option>
+                                }        
+                                @if (item.state !== 'READY') {
+                                    <mat-option value="READY">READY</mat-option>
+                                }                                                                                                                            
+                            </mat-select>
+                        </mat-form-field> 
+                    </div>  
                 </div>
-            </div>
-            <div class="col col-1">
-                <button class="btn btn-secondary" (click)="updateItemAssignedTo(item.id)">Save</button>
-            </div>
-            <div class="col col-3">
-                <div class="m-2">
-                    <h6>Estimation:</h6>
-                    <input type="number" min="1" step="1" [value]="item.estimation" [(ngModel)]="newEstimation" />
+                <div class="col col-1">
+                    <button class="btn btn-secondary" (click)="updateItemState(item.id)">Save</button>
                 </div>
-            </div>  
-            <div class="col col-1">
-                <button class="btn btn-secondary" (click)="updateItemEstimation(item.id)">Save</button>
-            </div>                                  
-        </div>
-        <div class="row m-1">
-            <button class="btn btn-secondary" (click)="deleteItem(item.id)">Delete Item</button>
-        </div>
-        <div class="row m-1">
-            <button class="btn btn-secondary" (click)="closeItemDetail()">Close</button>
-        </div>
+                <div class="col col-3">
+                    <div class="m-2">
+                        <h6>Assign to</h6>
+                        <mat-form-field>
+                            <mat-label>Users</mat-label>
+                            <mat-select name="newAssignedTo" [(value)]="newAssignedTo">
+                                @if (teamMembers) {
+                                    @for (teamMember of teamMembers; track teamMember.id) {
+                                        @if (teamMember.id !== item.assignedTo.id) {
+                                            <mat-option [value]="teamMember.id">{{ teamMember.name }}</mat-option>
+                                        }
+                                    }
+                                } @else {
+                                    <p>Loading users...</p>
+                                }
+                            </mat-select>
+                        </mat-form-field>      
+                    </div>
+                </div>
+                <div class="col col-1">
+                    <button class="btn btn-secondary" (click)="updateItemAssignedTo(item.id)">Save</button>
+                </div>
+                <div class="col col-3">
+                    <div class="m-2">
+                        <h6>Estimation:</h6>
+                        <input type="number" min="1" step="1" [value]="item.estimation" [(ngModel)]="newEstimation" />
+                    </div>
+                </div>  
+                <div class="col col-1">
+                    <button class="btn btn-secondary" (click)="updateItemEstimation(item.id)">Save</button>
+                </div>                                  
+            </div>
+        }
     }
 </div>

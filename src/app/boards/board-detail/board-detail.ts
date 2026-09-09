@@ -5,18 +5,21 @@ import { map, tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { Item } from '../../model/item';
 import { ItemDetail } from "../../items/item-detail/item-detail";
-import { Observable } from 'rxjs';
 import { BoardBacklog } from '../board-backlog/board-backlog';
 import { AuthService } from '../../services/auth-service';
 import { ItemCreate } from '../../items/item-create/item-create';
 import { BoardService } from '../../services/board-service';
-import { AsyncPipe, DatePipe } from '@angular/common';
 import { WipLimit } from '../../model/wip-limit';
 import { WipLimitService } from '../../services/wip-limit-service';
+import { DatePipe } from '@angular/common';
+import { ItemState } from '../../model/wip-limit';
+import { User } from '../../model/user';
+import { Comment } from '../../model/comment';
+import { CommentService } from '../../services/comment-service';
 
 @Component({
   selector: 'app-board-detail',
-  imports: [ItemDetail,AsyncPipe, BoardBacklog, ItemCreate, DatePipe],
+  imports: [ItemDetail, BoardBacklog, ItemCreate, DatePipe],
   templateUrl: './board-detail.html',
   styleUrl: './board-detail.css',
 })
@@ -25,7 +28,8 @@ export class BoardDetail implements OnInit {
   authService: AuthService
 
   constructor(private router: Router, private itemService: ItemService, private route: ActivatedRoute, 
-    authService: AuthService, private boardService: BoardService, private wipLimitService: WipLimitService){
+    authService: AuthService, private boardService: BoardService, private wipLimitService: WipLimitService,
+    private commentService: CommentService){
       this.authService = authService
     }
 
@@ -37,7 +41,10 @@ export class BoardDetail implements OnInit {
   teamId!: string | undefined
   showCreateItem!: boolean
   wipLimits!: WipLimit[] | undefined
-  itemCountMap: Map<string, string> = new Map<string, string>()
+  teamMembers!: User[] | undefined
+  itemCountMap!: Map<ItemState, number>
+  wipLimitsMap!: Map<ItemState, number>
+  comments!: Comment[] | null
 
   ngOnInit(): void {
     this.route.params.pipe(
@@ -47,32 +54,47 @@ export class BoardDetail implements OnInit {
       this.itemService.allBoardItemsObs(boardId).subscribe(
         boardItems => {
           this.boardItems = boardItems
+          this.itemCountMap =  this.countItemsByState(this.boardItems as Item[])
           this.boardService.allBoardsObs().subscribe(
             boards => {
-            this.boardName = boards?.find(b => b.id === boardId)?.name
-            this.teamId = boards?.find(b => b.id === boardId)?.team.id
+              this.boardName = boards?.filter(b => b !== undefined).find(b => b.id === boardId)?.name
+              this.teamId = boards?.filter(b => b !== undefined).find(b => b.id === boardId)?.team.id
+              this.teamMembers = boards?.filter(b => b !== undefined).find(b => b.id === boardId)?.team.teamMembers
+              }
+            )
             this.wipLimitService.allWipLimitsObs().subscribe(
               wipLimits => {
                 this.wipLimits = wipLimits?.filter(l => l.teamId === this.teamId)
-                this.foo()
-                }
-              )
-            }
-          )
-        } 
-      )
-    })
+                const counts = new Map<ItemState, number>();
+                wipLimits?.filter(wipLimit => wipLimit.teamId === this.teamId).forEach(
+                  wipLimit => counts.set(wipLimit.state, wipLimit.maxItems)
+                )
+                this.wipLimitsMap = counts
+              }
+            )
+          } 
+        )
+      }
+    )
   }
 
-  foo() {
-    let actual = this.boardItems?.filter(i => i.state === 'TO_DO').length
-    let maximal = this.wipLimits?.filter(l => l.teamId === this.teamId).filter(l => l.state === 'TO_DO').length
-    this.itemCountMap.set('TO_DO', actual + '/' + maximal)
+  updateComments(itemId: string) {
+    this.commentService.allItemCommentsObs(itemId).subscribe(
+      comments => {
+        this.comments = comments
+        this.isShowItem = true
+      }
+    )
   }
 
   showItemDetail(item: Item) {
     this.selectedItem = item
-    this.isShowItem = true
+    this.commentService.allItemCommentsObs(item.id).subscribe(
+      comments => {
+        this.comments = comments
+        this.isShowItem = true
+      }
+    )
   }
 
   closeItemDetails() {
@@ -92,5 +114,14 @@ export class BoardDetail implements OnInit {
   closeCreateItem() {
     this.showCreateItem = false
   }
+
+  allStates: ItemState[] = ["TO_DO", "READY", "IN_PROGRESS", "CODE_REVIEW", "IN_TEST", "READY_FOR_PROD", "DONE"];
+
+  countItemsByState(items: Item[]): Map<ItemState, number> {
+    const counts = new Map<ItemState, number>(this.allStates.map(s => [s, 0]));
+    items.forEach(item => counts.set(item.state, (counts.get(item.state) ?? 0) + 1));
+  return counts;
+
+}
 
 }

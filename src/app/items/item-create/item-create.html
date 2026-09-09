@@ -66,7 +66,10 @@
             </small>
             }
         </div>  
-        <button type="submit" [disabled]="!createItemForm.valid" class="btn btn-secondary mt-2">Create</button>
+        <button type="submit" [disabled]="!createItemForm.valid || showWipLimitError" class="btn btn-secondary mt-2">Create</button>
+        @if (showWipLimitError) {
+            <p>Wip Limit reached! </p>
+        }
         <button type="button" class="btn btn-secondary mt-2" (click)="closeCreateItem()">Close</button>
     </form>
 </div>

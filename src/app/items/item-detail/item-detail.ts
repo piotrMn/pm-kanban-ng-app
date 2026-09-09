@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Item } from '../../model/item';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgPlural } from '@angular/common';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelect, MatOption } from '@angular/material/select';
@@ -10,11 +10,16 @@ import { User } from '../../model/user';
 import { ActivatedRoute } from '@angular/router';
 import { map, tap } from 'rxjs';
 import { BoardService } from '../../services/board-service';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule } from '@angular/forms';
+import { CommentService } from '../../services/comment-service';
+import { Comment } from '../../model/comment';
+import { AuthService } from '../../services/auth-service';
+import { FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CreateCommentRequest } from '../../model/create-comment-request';
 
 @Component({
   selector: 'app-item-detail',
-  imports: [DatePipe, MatFormField, MatLabel, MatInputModule, MatSelect, MatOption, FormsModule],
+  imports: [DatePipe, MatFormField, MatLabel, MatInputModule, MatSelect, MatOption, FormsModule, ReactiveFormsModule],
   templateUrl: './item-detail.html',
   styleUrl: './item-detail.css',
 })
@@ -22,15 +27,25 @@ export class ItemDetail implements OnInit {
 
   @Input() item!: Item | null
   @Input() boardId!: string
+  @Input() comments!: Comment[] | null
   @Output() closeItemEvent = new EventEmitter<void>()
+  @Output() commentAddedEvent = new EventEmitter<string>()
+
+  createCommentForm: FormGroup = new FormGroup({})
 
   newState!: string
   teamMembers!: User[] | undefined
   newAssignedTo!: string 
   newEstimation!: number | undefined
+  authService: AuthService
+  showComments: boolean = false
+  showEditPanel: boolean = false
+  showAddComment: boolean = true
 
-  constructor(private itemService: ItemService, private router: Router, 
-    private route: ActivatedRoute, private boardService: BoardService){}
+  constructor(private itemService: ItemService, private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder,
+    private boardService: BoardService, private commentService: CommentService, authService: AuthService){
+      this.authService = authService
+    }
 
   ngOnInit(): void {
     this.route.params.pipe(
@@ -45,6 +60,9 @@ export class ItemDetail implements OnInit {
         )
       }
     )
+    this.createCommentForm = this.formBuilder.group({
+      content: ['', Validators.required],
+    });
   }
 
   closeItemDetail() {
@@ -81,6 +99,37 @@ export class ItemDetail implements OnInit {
   deleteItem(itemId: string) {
     this.itemService.deleteItem(itemId, this.boardId).subscribe()
     this.closeItemEvent.emit()
+  }
+
+  deleteComment(commentId: string, itemId: string) {
+    this.commentService.deleteComment(commentId, itemId).subscribe()
+  }
+
+  toggleComments() {
+    this.showComments = !this.showComments
+  }
+
+  toggleEditPanel() {
+    this.showEditPanel = !this.showEditPanel
+  }  
+
+  onAddComment(itemId: string) {
+    if (this.createCommentForm.valid) {
+      let content: string = this.createCommentForm.value['content']
+      let request: CreateCommentRequest = {
+        content: content,
+        authorId: this.authService.getUserId(),
+        itemId: itemId
+      }
+      console.log(request)
+      this.commentService.saveComment(request).subscribe(
+        () => {
+          this.createCommentForm.reset
+          this.commentAddedEvent.emit(itemId)
+        }
+      )
+      
+    }
   }
 
 }

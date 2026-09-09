@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, tap } from 'rxjs';
 import { Item } from '../model/item'; 
 import { Observable } from 'rxjs';
 import { ApiConstants } from '../api-constants';
-import { addBodyClass } from '@angular/cdk/schematics';
 import { CreateItemRequest } from '../model/create-item-request';
 
 @Injectable({
@@ -18,7 +17,7 @@ export class ItemService {
 
   
   public allBoardItemsObs(boardId: string): Observable<Item[] | null> {
-    if (this.boardItemsSubject.value == null) {
+    if (this.boardItemsSubject.value === null) {
       this.getAllBoardItems(boardId).subscribe()
     }
     return this.boardItemsSubject.asObservable()
