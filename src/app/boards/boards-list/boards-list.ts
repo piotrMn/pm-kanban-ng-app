@@ -5,17 +5,18 @@ import { BoardService } from '../../services/board-service';
 import { filter, forkJoin, map, of, switchMap, tap } from 'rxjs';
 import { Team } from '../../model/team';
 import { Board } from '../../model/board';
-import { RouterLink } from "@angular/router";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-boards-list',
-  imports: [ RouterLink ],
+  imports: [] ,
   templateUrl: './boards-list.html',
   styleUrl: './boards-list.css',
 })
 export class BoardsList implements OnInit {
 
-  constructor(private teamService: TeamService, private authService: AuthService, private boardService: BoardService){}
+  constructor(private teamService: TeamService, private authService: AuthService, private boardService: BoardService, 
+    private router: Router){}
 
   userTeams!: Team[] | undefined
   userBoards!: Board[] | undefined
@@ -32,6 +33,10 @@ export class BoardsList implements OnInit {
       ),
       map(boardLists => boardLists.flat())
     ).subscribe(boards => this.userBoards = boards)
+  }
+
+  showBoardDetails(boardId: string) {
+    this.router.navigate([`boards/${boardId}`])
   }
 
 }

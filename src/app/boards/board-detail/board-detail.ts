@@ -1,7 +1,7 @@
 import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { ItemService } from '../../services/item-service';
-import { map, tap } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { Item } from '../../model/item';
 import { ItemDetail } from "../../items/item-detail/item-detail";
@@ -17,6 +17,7 @@ import { User } from '../../model/user';
 import { Comment } from '../../model/comment';
 import { CommentService } from '../../services/comment-service';
 import { TeamService } from '../../services/team-service';
+import { timer } from 'rxjs';
 
 @Component({
   selector: 'app-board-detail',
@@ -47,16 +48,22 @@ export class BoardDetail implements OnInit {
   wipLimitsMap!: Map<ItemState, number>
   comments!: Comment[] | null
   teamName!: string | undefined
+  isLoading = false
 
   ngOnInit(): void {
     this.route.params.pipe(
       map(params => params['id']),
-      tap(id => this.boardId = id)
+      tap(id => this.boardId = id),
+      tap(() => this.isLoading = true),
+      tap(() => console.log(this.isLoading)),
     ).subscribe(boardId => {
-      this.itemService.allBoardItemsObs(boardId).subscribe(
+      this.itemService.allBoardItemsObs(boardId).pipe(
+        filter((items): items is Item[] => items !== null)
+      )
+      .subscribe(
         boardItems => {
           this.boardItems = boardItems
-          this.itemCountMap =  this.countItemsByState(this.boardItems)
+          this.itemCountMap = this.countItemsByState(this.boardItems)
           this.boardService.allBoardsObs().subscribe(
             boards => {
               this.boardName = boards?.filter(b => b !== undefined).find(b => b.id === boardId)?.name
@@ -77,9 +84,13 @@ export class BoardDetail implements OnInit {
                   wipLimit => counts.set(wipLimit.state, wipLimit.maxItems)
                 )
                 this.wipLimitsMap = counts
+
               }
             )
+            this.isLoading = false
+            console.log(this.isLoading)
           } 
+
         )
       }
     )

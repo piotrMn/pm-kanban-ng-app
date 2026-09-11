@@ -14,12 +14,9 @@ export class ItemService {
   private boardItemsSubject: BehaviorSubject<Item[] | null> = new BehaviorSubject<Item[] | null>(null)
 
   constructor(private http: HttpClient){}
-
-  
+ 
   public allBoardItemsObs(boardId: string): Observable<Item[] | null> {
-    if (this.boardItemsSubject.value === null) {
-      this.getAllBoardItems(boardId).subscribe()
-    }
+    this.getAllBoardItems(boardId).subscribe()
     return this.boardItemsSubject.asObservable()
   }
 

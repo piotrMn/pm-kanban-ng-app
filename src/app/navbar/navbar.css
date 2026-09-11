@@ -1,0 +1,68 @@
+.app-navbar {
+  margin-top: 1rem;
+  padding: 0.65rem 1rem;
+  background: #172033;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 14px rgb(23 32 51 / 12%);
+}
+
+.navbar-brand {
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.brand-mark {
+  display: inline-grid;
+  width: 1.8rem;
+  height: 1.8rem;
+  margin-right: 0.4rem;
+  place-items: center;
+  color: #172033;
+  background: #62d2c3;
+  border-radius: 0.35rem;
+}
+
+.nav-link {
+  margin: 0 0.2rem;
+  color: #cbd5e1;
+  border-radius: 0.35rem;
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #fff;
+  background: rgb(255 255 255 / 12%);
+}
+
+.user-greeting {
+  margin-right: 0.75rem;
+  color: #cbd5e1;
+}
+
+.logout-button,
+.signup-button {
+  padding: 0.4rem 0.75rem;
+  color: #172033;
+  font-weight: 600;
+  background: #62d2c3;
+  border: 0;
+  border-radius: 0.35rem;
+  text-decoration: none;
+}
+
+.logout-button:hover,
+.signup-button:hover {
+  background: #85e0d4;
+}
+
+@media (max-width: 991.98px) {
+  .app-navbar {
+    border-radius: 0;
+  }
+
+  .user-greeting {
+    margin: 0.5rem 0;
+  }
+}

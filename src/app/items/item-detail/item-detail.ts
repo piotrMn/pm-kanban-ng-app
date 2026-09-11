@@ -50,7 +50,6 @@ export class ItemDetail implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     let previous = changes['item']?.previousValue
     let current = changes['item']?.currentValue
-    console.log(current)
     if (previous && current && previous !== current) {
       this.showEditPanel = false
       this.showComments = false

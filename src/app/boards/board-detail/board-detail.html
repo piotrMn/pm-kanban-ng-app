@@ -1,4 +1,9 @@
 <div class="container m-2">
+    @if (isLoading) {
+    <div class="spinner-border text-primary">
+        <span class="sr-only">Loading...</span>
+    </div>
+    } @else {
     <div class="row">
         <div class="m-3 text-center">
             <h4>{{ boardName }}</h4>
@@ -145,5 +150,6 @@
         }
     } @else {
         <p>Loading items...</p>
+    }
     }
 </div>
