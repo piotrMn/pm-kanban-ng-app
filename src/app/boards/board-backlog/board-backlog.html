@@ -1,21 +1,30 @@
-<div class="container mt-5">
-    <div class="text-center">
+
+
+<div class="row">
+@if(items; as items) {
+    <div class="text-center bg-secondary">
         <h5>Backlog</h5>
     </div>
-    <div class="row">
-    @if(items; as items) {
-        @for(item of items; track item.id) {
-            @if(item.state === 'TO_DO') {
-                <div class="card m-2 bg-warning d-inline" (click)="showItemDetail(item)">
+    @for(item of items; track item.id) {
+        @if(item.state === 'TO_DO') {
+            <div class="col-2">
+                <div class="card m-2 bg-warning" (click)="showItemDetail(item)">
+                    <div class="card-header"><h6>{{ item.title }}</h6></div>
                     <div class="card-body">
-                        <h6 class="card-title">{{ item.title }} 
-                        <span class="badge bg-dark m-1">{{ item.type }}</span>
-                        <span class="badge bg-dark m-1">{{ item.estimation }} pts.</span>
+                        @if (item.assignedTo) {
+                            <p>{{ item.assignedTo.name }}</p>
+                        } @else {
+                            <p>{{ item.createdAt | date }}</p>   
+                        }
+                        <h6>
+                            <span class="badge bg-secondary">{{ item.type }}</span>
+                            <span class="badge bg-secondary">{{ item.estimation }} pts.</span>
                         </h6>
                     </div>
                 </div>
-            }
-        }   
-    }
-    </div>
+            </div>
+        }
+    }   
+}
 </div>
+

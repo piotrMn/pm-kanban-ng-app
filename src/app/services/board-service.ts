@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Board } from '../model/board';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { ApiConstants } from '../api-constants';
+import { CreateBoardRequest } from '../model/create-board-request';
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +29,12 @@ export class BoardService {
 
   getTeamBoards(teamId: string): Observable<Board[]> {
     return this.http.get<Board[]>(`${ApiConstants.BASE_URL}/boards/${teamId}`)
+  }
+
+  postCreateBoardRequest(request: CreateBoardRequest): Observable<string> {
+    return this.http.post<string>(`${ApiConstants.BASE_URL}/boards`, request).pipe(
+      tap(() => this.getAllBoards().subscribe())
+    )
   }
   
 }

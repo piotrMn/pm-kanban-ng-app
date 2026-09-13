@@ -29,7 +29,7 @@ export class EditTeam implements OnInit {
       }
       )
     })
-    this.userService.allTeamsObs().subscribe(
+    this.userService.allUsersObs().subscribe(
       users => this.users = users
     )
   }

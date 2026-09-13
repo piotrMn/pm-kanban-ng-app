@@ -5,6 +5,9 @@ import { TeamExistsService } from '../../services/team-exists';
 import { CreateTeamRequest } from '../../model/create-team-request';
 import { AuthService } from '../../services/auth-service';
 import { Router } from '@angular/router';
+import { UserService } from '../../services/user-service';
+import { User } from '../../model/user';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-create-team',
@@ -18,13 +21,24 @@ export class CreateTeam implements OnInit {
       private teamService: TeamService,
       private teamExistsService: TeamExistsService,
       private authService: AuthService,
+      private userService: UserService,
       private router: Router){}
 
     createTeamForm: FormGroup = new FormGroup({})
+    allUsers!: User[]
+    selectedUsers: User[] = []
 
     ngOnInit() {
-      this.createTeamForm = this.formBuilder.group(
-        {teamName: ['', [Validators.required, Validators.minLength(6)]]}, 
+      this.userService.allUsersObs().pipe(
+        filter(u => u !== null)
+      )
+      .subscribe(
+        users => this.allUsers = users
+      )
+      this.createTeamForm = this.formBuilder.group({
+        teamName: ['', [Validators.required, Validators.minLength(6)]],
+        users: []
+      }, 
         { validators: this.teamExistsService.teamExistsValidator('teamName') }
       );
     }
@@ -35,8 +49,9 @@ export class CreateTeam implements OnInit {
         let request: CreateTeamRequest = {
           name: createTeam.teamName,
           createdByEmail: this.authService.getUserEmail(),
-          membersIds: []
+          membersIds: this.selectedUsers.map(u => u.id)
         }
+        console.log(request)
         this.teamService.postCreateTeamRequest(request).subscribe({
           next: resp => {
             this.router.navigate(['teams'])
@@ -47,5 +62,22 @@ export class CreateTeam implements OnInit {
         })
       }
     }
+
+  onSelectUser(event: any) {
+    if (event.target.value) {
+      let userId = event.target.value
+      this.userService.allUsersObs().subscribe(
+        users => {
+          let user = users?.find(u => u.id === userId)
+          this.selectedUsers.push(user as User)
+        } 
+      )
+      this.selectedUsers.push
+    }
+  }
+
+  removeSelectedUser(userId: string) {
+    this.selectedUsers = this.selectedUsers.filter(u => u.id !== userId)
+  }
 
 }

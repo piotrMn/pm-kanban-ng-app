@@ -5,18 +5,47 @@
             <label for="teamName">Team name:</label>
             <input id="teamName" formControlName="teamName" class="form-control" />
         </div>
-<!--         <div class="form-group">
-            <label for="password">Password:</label>
-            <input id="password" type="password" formControlName="password" class="form-control" />
-            @if(createTeamForm.get('password')?.invalid && createTeamForm.get('password')?.touched) {
-                <small class="form-text text-muted">Password must be at least 8 characters long.</small> 
-            }
-        </div> -->
         <div>
+        <div class="container mt-3">
+            <div class="row">
+                <div class="col col-6">
+                @if (allUsers && allUsers.length > 0) {
+                    <div class="form-group">
+                        <label for="users">Select Users:</label>
+                        <select id="users" formControlName="users" class="form-control" (change)="onSelectUser($event)">
+                            @for (user of allUsers; track user.id) {
+                                @if (selectedUsers.indexOf(user) < 0) {
+                                <option [value]="user.id">{{ user.name }}</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                }          
+                </div> 
+                <div class="col col-6">
+                @if (selectedUsers && selectedUsers.length > 0) {
+                    <h5>Selected users</h5>
+                    @for (user of selectedUsers; track user.id) {
+                        <div class="row">
+                            <div class="col">
+                                <p>{{ user.name }}</p>
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-secondary" (click)="removeSelectedUser(user.id)">Remove</button>
+                            </div>
+                        </div>
+                        
+                    }
+                }
+                </div>                               
+            </div>
+        </div>         
         @if(createTeamForm.get('teamName')?.errors?.['teamAlreadyExists']) {
             <p class="form-text  p-2">Team already exists.</p>
         }
         </div>
-        <button type="submit" [disabled]="!createTeamForm.valid" class="btn btn-primary">Create</button>
+        <div class="mt-3">
+            <button type="submit" [disabled]="!createTeamForm.valid" class="btn btn-primary">Create Team</button>
+        </div>
     </form>
 </div>

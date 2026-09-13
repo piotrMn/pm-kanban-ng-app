@@ -5,7 +5,6 @@ import { CreateItemRequest } from '../../model/create-item-request';
 import { AuthService } from '../../services/auth-service';
 import { User } from '../../model/user';
 import { BoardService } from '../../services/board-service';
-import { ActivatedRoute } from '@angular/router';
 import { Output } from '@angular/core';
 import { ItemState } from '../../model/wip-limit';
 
@@ -34,8 +33,7 @@ export class ItemCreate {
   showWipLimitError: boolean = false
 
   constructor(private readonly formBuilder: FormBuilder, private itemService: ItemService, 
-    private authService: AuthService, private boardService: BoardService,
-    private route: ActivatedRoute){}
+    private authService: AuthService, private boardService: BoardService){}
 
   createItemForm: FormGroup = new FormGroup({})
 

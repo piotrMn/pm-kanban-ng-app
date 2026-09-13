@@ -13,7 +13,7 @@ export class UserService {
 
   constructor(private http: HttpClient){}
 
-  allTeamsObs(): Observable<User[] | null> {
+  allUsersObs(): Observable<User[] | null> {
     if (this.allUsersSubject.value == null) {
       this.getAllUsers().subscribe()
     }

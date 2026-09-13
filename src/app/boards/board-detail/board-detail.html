@@ -1,7 +1,9 @@
 <div class="container m-2">
     @if (isLoading) {
-    <div class="spinner-border text-primary">
-        <span class="sr-only">Loading...</span>
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+        <div class="spinner-border" style="width: 8rem; height: 8rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
     </div>
     } @else {
     <div class="row">
@@ -19,24 +21,6 @@
         @if(boardItems.length > 0) {
             <div class="row">
                 <div class="col col-2 text-center">
-                    <h6>READY</h6>
-                    {{ itemCountMap.get('READY') }}/{{ wipLimitsMap.get('READY') }}
-                    @for(item of boardItems; track item.id) {
-                        @if(item.state === 'READY') {
-                            <div class="card m-2 bg-warning" (click)="showItemDetail(item)">
-                                <div class="card-header"><h6>{{ item.title }}</h6></div>
-                                <div class="card-body">
-                                    <p>{{ item.createdAt | date }}</p>
-                                    <h6>
-                                        <span class="badge bg-dark">{{ item.type }}</span>
-                                        <span class="badge bg-dark">{{ item.estimation }} pts.</span>
-                                    </h6>
-                                </div>
-                            </div>
-                        }
-                    }
-                </div>
-                <div class="col col-2 text-center">
                     <h6>IN PROGRESS</h6>
                     {{ itemCountMap.get('IN_PROGRESS') }}/{{ wipLimitsMap.get('IN_PROGRESS') }}
                     @for(item of boardItems; track item.id) {
@@ -44,28 +28,14 @@
                             <div class="card m-2 bg-warning" (click)="showItemDetail(item)">
                                 <div class="card-header"><h6>{{ item.title }}</h6></div>
                                 <div class="card-body">
-                                    <p>{{ item.createdAt | date }}</p>
+                                @if (item.assignedTo) {
+                                    <p>{{ item.assignedTo.name }}</p>
+                                } @else {
+                                    <p>{{ item.createdAt | date }}</p>   
+                                }
                                     <h6>
-                                        <span class="badge bg-dark">{{ item.type }}</span>
-                                        <span class="badge bg-dark">{{ item.estimation }} pts.</span>
-                                    </h6>
-                                </div>
-                            </div>
-                        }
-                    }
-                </div>
-                <div class="col col-2 text-center">
-                    <h6>CODE REVIEW</h6>
-                    {{ itemCountMap.get('CODE_REVIEW') }}/{{ wipLimitsMap.get('CODE_REVIEW') }}                    
-                    @for(item of boardItems; track item.id) {
-                        @if(item.state === 'CODE_REVIEW') {
-                            <div class="card m-2 bg-warning" (click)="showItemDetail(item)">
-                                <div class="card-header"><h6>{{ item.title }}</h6></div>
-                                <div class="card-body">
-                                    <p>{{ item.createdAt | date }}</p>
-                                    <h6>
-                                        <span class="badge bg-dark">{{ item.type }}</span>
-                                        <span class="badge bg-dark">{{ item.estimation }} pts.</span>
+                                        <span class="badge bg-secondary">{{ item.type }}</span>
+                                        <span class="badge bg-secondary">{{ item.estimation }} pts.</span>
                                     </h6>
                                 </div>
                             </div>
@@ -80,16 +50,64 @@
                             <div class="card m-2 bg-warning" (click)="showItemDetail(item)">
                                 <div class="card-header"><h6>{{ item.title }}</h6></div>
                                 <div class="card-body">
-                                    <p>{{ item.createdAt | date }}</p>
+                                @if (item.assignedTo) {
+                                    <p>{{ item.assignedTo.name }}</p>
+                                } @else {
+                                    <p>{{ item.createdAt | date }}</p>   
+                                }
                                     <h6>
-                                        <span class="badge bg-dark">{{ item.type }}</span>
-                                        <span class="badge bg-dark">{{ item.estimation }} pts.</span>
+                                        <span class="badge bg-secondary">{{ item.type }}</span>
+                                        <span class="badge bg-secondary">{{ item.estimation }} pts.</span>
+                                    </h6>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>                
+                <div class="col col-2 text-center">
+                    <h6>CODE REVIEW</h6>
+                    {{ itemCountMap.get('CODE_REVIEW') }}/{{ wipLimitsMap.get('CODE_REVIEW') }}                    
+                    @for(item of boardItems; track item.id) {
+                        @if(item.state === 'CODE_REVIEW') {
+                            <div class="card m-2 bg-warning" (click)="showItemDetail(item)">
+                                <div class="card-header"><h6>{{ item.title }}</h6></div>
+                                <div class="card-body">
+                                @if (item.assignedTo) {
+                                    <p>{{ item.assignedTo.name }}</p>
+                                } @else {
+                                    <p>{{ item.createdAt | date }}</p>   
+                                }
+                                    <h6>
+                                        <span class="badge bg-secondary">{{ item.type }}</span>
+                                        <span class="badge bg-secondary">{{ item.estimation }} pts.</span>
                                     </h6>
                                 </div>
                             </div>
                         }
                     }
                 </div>
+                <div class="col col-2 text-center">
+                    <h6>READY</h6>
+                    {{ itemCountMap.get('READY') }}/{{ wipLimitsMap.get('READY') }}
+                    @for(item of boardItems; track item.id) {
+                        @if(item.state === 'READY') {
+                            <div class="card m-2 bg-warning" (click)="showItemDetail(item)">
+                                <div class="card-header"><h6>{{ item.title }}</h6></div>
+                                <div class="card-body">
+                                @if (item.assignedTo) {
+                                    <p>{{ item.assignedTo.name }}</p>
+                                } @else {
+                                    <p>{{ item.createdAt | date }}</p>   
+                                }
+                                    <h6>
+                                        <span class="badge bg-secondary">{{ item.type }}</span>
+                                        <span class="badge bg-secondary">{{ item.estimation }} pts.</span>
+                                    </h6>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>                
                 <div class="col col-2 text-center">
                     <h6>READY FOR PROD</h6>                      
                     {{ itemCountMap.get('READY_FOR_PROD') }}/{{ wipLimitsMap.get('READY_FOR_PROD') }}   
@@ -98,10 +116,14 @@
                             <div class="card m-2 bg-warning" (click)="showItemDetail(item)">
                                 <div class="card-header"><h6>{{ item.title }}</h6></div>
                                 <div class="card-body">
-                                    <p>{{ item.createdAt | date }}</p>
+                                @if (item.assignedTo) {
+                                    <p>{{ item.assignedTo.name }}</p>
+                                } @else {
+                                    <p>{{ item.createdAt | date }}</p>   
+                                }
                                     <h6>
-                                        <span class="badge bg-dark">{{ item.type }}</span>
-                                        <span class="badge bg-dark">{{ item.estimation }} pts.</span>
+                                        <span class="badge bg-secondary">{{ item.type }}</span>
+                                        <span class="badge bg-secondary">{{ item.estimation }} pts.</span>
                                     </h6>
                                 </div>
                             </div>
@@ -116,10 +138,14 @@
                             <div class="card m-2 bg-warning" (click)="showItemDetail(item)">
                                 <div class="card-header"><h6>{{ item.title }}</h6></div>
                                 <div class="card-body">
-                                    <p>{{ item.createdAt | date }}</p>
+                                @if (item.assignedTo) {
+                                    <p>{{ item.assignedTo.name }}</p>
+                                } @else {
+                                    <p>{{ item.createdAt | date }}</p>   
+                                }
                                     <h6>
-                                        <span class="badge bg-dark">{{ item.type }}</span>
-                                        <span class="badge bg-dark">{{ item.estimation }} pts.</span>
+                                        <span class="badge bg-secondary">{{ item.type }}</span>
+                                        <span class="badge bg-secondary">{{ item.estimation }} pts.</span>
                                     </h6>
                                 </div>
                             </div>
@@ -136,14 +162,6 @@
                 (closeItemEvent)="closeItemDetails()"></app-item-detail>
             </div>
             }
-            @if(showCreateItem) {
-                <app-item-create (closeCreateItemEvent)="closeCreateItem()" 
-                    [teamMembers]="teamMembers" 
-                    [itemCountMap]="itemCountMap"
-                    [wipLimitsMap]="wipLimitsMap"
-                    [boardId]="boardId">
-                </app-item-create>
-            }
             <app-board-backlog (showBacklogItem)="showBacklogItem($event)" [items]="boardItems"></app-board-backlog>
         } @else {
             <p>No items found</p>
@@ -151,5 +169,8 @@
     } @else {
         <p>Loading items...</p>
     }
-    }
+}
+@if (showCreateItem) {
+    <app-item-create [teamMembers]="teamMembers" [itemCountMap]="itemCountMap" [wipLimitsMap]="wipLimitsMap" [boardId]="boardId"></app-item-create>
+}
 </div>

@@ -1,0 +1,20 @@
+<div class="m-5">
+    <form [formGroup]="createBoardForm" (ngSubmit)="onSubmit()">
+        <h2>Create Board</h2>
+        <div class="form-group">
+            <label for="boardName">Board name:</label>
+            <input id="boardName" formControlName="boardName" class="form-control" />
+        </div>
+        @if (teams && teams.length > 0) {
+        <div class="form-group">
+            <label for="teamName">Select Team:</label>
+            <select id="teamName" formControlName="teamName" class="form-control">
+                @for (team of teams; track team.name) {
+                    <option [value]="team.name">{{ team.name }}</option>
+                }
+            </select>
+        </div>
+        }
+        <button type="submit" [disabled]="!createBoardForm.valid" class="btn btn-primary">Create</button>
+    </form>
+</div>

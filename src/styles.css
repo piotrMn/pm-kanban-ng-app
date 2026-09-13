@@ -1,3 +1,7 @@
+html {
+  scrollbar-gutter: stable;
+}
+
 /* mat-select overlay panel renders outside app root, so it needs a global rule to get an opaque background */
 .mat-mdc-select-panel {
   background-color: #fff !important;

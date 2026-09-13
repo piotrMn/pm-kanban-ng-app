@@ -2,7 +2,7 @@
     @if (item) {
         <div class="row">
             <div class="row">
-                <div class="card w-100 bg-light">
+                <div class="card w-100 bg-warning">
                     <div class="card-header">
                         <h5 class="card-title">
                             <span class="badge bg-secondary m-1">{{ item.type }}</span>
@@ -82,7 +82,10 @@
                                 }        
                                 @if (item.state !== 'READY') {
                                     <mat-option value="READY">READY</mat-option>
-                                }                                                                                                                            
+                                }       
+                                @if (item.state !== 'CODE_REVIEW') {
+                                    <mat-option value="CODE_REVIEW">CODE_REVIEW</mat-option>
+                                }                                                                                                                                                         
                             </mat-select>
                         </mat-form-field> 
                     </div>  

@@ -17,11 +17,10 @@ import { User } from '../../model/user';
 import { Comment } from '../../model/comment';
 import { CommentService } from '../../services/comment-service';
 import { TeamService } from '../../services/team-service';
-import { timer } from 'rxjs';
 
 @Component({
   selector: 'app-board-detail',
-  imports: [ItemDetail, BoardBacklog, ItemCreate, DatePipe],
+  imports: [ItemDetail, BoardBacklog, DatePipe, ItemCreate],
   templateUrl: './board-detail.html',
   styleUrl: './board-detail.css',
 })
