@@ -162,7 +162,7 @@
                 (closeItemEvent)="closeItemDetails()"></app-item-detail>
             </div>
             }
-            <app-board-backlog (showBacklogItem)="showBacklogItem($event)" [items]="boardItems"></app-board-backlog>
+            <app-board-backlog (showBacklogItem)="showBacklogItem($event)" [items]="boardItems" />
         } @else {
             <p>No items found</p>
         }
@@ -171,6 +171,8 @@
     }
 }
 @if (showCreateItem) {
-    <app-item-create [teamMembers]="teamMembers" [itemCountMap]="itemCountMap" [wipLimitsMap]="wipLimitsMap" [boardId]="boardId"></app-item-create>
+    <app-item-create [teamMembers]="teamMembers" [itemCountMap]="itemCountMap" [wipLimitsMap]="wipLimitsMap" 
+    [boardId]="boardId" (closeCreateItemEvent)="closeCreateItem()" />
+    
 }
 </div>
