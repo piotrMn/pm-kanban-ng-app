@@ -27,8 +27,11 @@
         } @else {
             <p>Loading boards...</p>
         }
+        @if (authService.hasAuthority('BOARD_WRITE')) {
         <div class="text-center m-2">
             <button class="btn btn-info" (click)="createNewBoard()">Create new board</button>
         </div>  
+        }
+
     </div>
 }

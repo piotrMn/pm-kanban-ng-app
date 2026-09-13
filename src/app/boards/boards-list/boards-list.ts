@@ -15,9 +15,12 @@ import { Router } from '@angular/router';
 })
 export class BoardsList implements OnInit {
 
-  constructor(private teamService: TeamService, private authService: AuthService, private boardService: BoardService, 
-    private router: Router){}
+  constructor(private teamService: TeamService, authService: AuthService, private boardService: BoardService, 
+    private router: Router){
+      this.authService = authService
+    }
 
+  authService!: AuthService
   userTeams!: Team[] | undefined
   userBoards!: Board[] | undefined
   isLoading = false
