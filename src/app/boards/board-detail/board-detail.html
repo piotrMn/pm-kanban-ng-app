@@ -169,10 +169,10 @@
     } @else {
         <p>Loading items...</p>
     }
-}
-@if (showCreateItem) {
+    @if (showCreateItem) {
     <app-item-create [teamMembers]="teamMembers" [itemCountMap]="itemCountMap" [wipLimitsMap]="wipLimitsMap" 
     [boardId]="boardId" (closeCreateItemEvent)="closeCreateItem()" />
     
+    }
 }
 </div>
